@@ -2,6 +2,7 @@ const Property = require("../models/propertyModel");
 
 // createProperty;
 exports.createProperty = async (req, res) => {
+  const owner = req.user._id;
   const {
     title,
     description,
@@ -31,6 +32,7 @@ exports.createProperty = async (req, res) => {
     images,
     isFeatured,
     status,
+    owner,
   });
   res.status(201).json({
     message: "Property created successfully",
@@ -40,7 +42,9 @@ exports.createProperty = async (req, res) => {
 
 // getAllProperties;
 exports.getAllProperties = async (req, res) => {
-  const properties = await Property.find().sort({ createdAt: -1 });
+  const properties = await Property.find()
+    .sort({ createdAt: -1 })
+    .populate("owner");
   if (properties.length == 0) {
     return res.status(404).json({
       message: "No property found",
@@ -60,7 +64,7 @@ exports.getSingleProperty = async (req, res) => {
       message: "Please provide property id",
     });
   }
-  const property = await Property.findById(id);
+  const property = await Property.findById(id).populate("owner");
   if (!property) {
     return res.status(404).json({
       message: "No property found",

@@ -65,6 +65,11 @@ const propertySchema = new Schema(
       enum: ["sold", "available", "rented"],
       default: "available",
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   {
     timestamps: true,
